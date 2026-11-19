@@ -20,9 +20,9 @@ test('keeps the diagnostic form honest until a contact channel exists', async ()
   assert.doesNotMatch(page, /testimonio|clientes satisfechos|casos de éxito/i);
 });
 
-test('uses a separate system map instead of animating the logo mark', async () => {
+test('signs with the official wordmark and keeps the retired orbit out', async () => {
   const page = await readFile(pagePath, 'utf8');
 
-  assert.match(page, /SystemMap/);
-  assert.doesNotMatch(page, /orbit-mark--hero/);
+  assert.match(page, /ichkin-wordmark\.svg/);
+  assert.doesNotMatch(page, /SystemMap|OrbitMark|orbit-mark/);
 });
