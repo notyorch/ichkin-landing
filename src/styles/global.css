@@ -1,0 +1,48 @@
+@import '@fontsource-variable/bricolage-grotesque';
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --color-carbon: #111318;
+  --color-graphite: #252932;
+  --color-ivory: #f3f0e8;
+  --color-petroleum: #167a72;
+  --color-copper: #d66a45;
+  --color-technical: #89909a;
+  --ease-orbit: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:root {
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  background: var(--color-carbon);
+  color: var(--color-ivory);
+  font-synthesis: none;
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; }
+* { box-sizing: border-box; }
+::selection { background: var(--color-copper); color: var(--color-carbon); }
+:focus-visible { outline: 3px solid var(--color-copper); outline-offset: 4px; }
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: var(--color-carbon); }
+::-webkit-scrollbar-thumb { border: 3px solid var(--color-carbon); border-radius: 999px; background: var(--color-technical); }
+
+.orbit-mark { overflow: visible; }
+.orbit-mark .orbit-cream { stroke: #f3f0e8; }
+.orbit-mark--light .orbit-cream { stroke: #111318; }
+.orbit-mark .orbit-teal { stroke: #167a72; }
+.orbit-mark .nucleus { fill: #d66a45; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .topology-signal { transform-box: fill-box; transform-origin: center; animation: signal-breathe 3.6s var(--ease-orbit) infinite alternate; }
+  .topology-node { transform-box: fill-box; transform-origin: center; animation: node-breathe 3.6s var(--ease-orbit) infinite alternate; }
+  .topology-node:nth-of-type(2) { animation-delay: 500ms; }
+  .topology-node:nth-of-type(3) { animation-delay: 1000ms; }
+}
+
+@keyframes signal-breathe { from { opacity: 0.88; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes node-breathe { from { opacity: 0.6; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+input, textarea { font: inherit; }

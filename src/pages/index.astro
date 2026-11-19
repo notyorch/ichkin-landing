@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrbitMark from '../components/OrbitMark.astro';
+import SystemMap from '../components/SystemMap.astro';
+
+const services = [
+  { key: 'Web', items: 'Websites · Interfaces · Portfolios', copy: 'Una presencia que explica tu valor, orienta decisiones y abre conversaciones útiles.' },
+  { key: 'Sistemas', items: 'ERP · CRM · CMS · ITSM · BPM', copy: 'Procesos y herramientas que dejan de vivir en archivos sueltos, chats y memoria.' },
+  { key: 'Datos', items: 'ETL · Data warehouse · Analytics', copy: 'Información que llega completa, se entiende y se puede convertir en una decisión.' },
+  { key: 'Inteligencia', items: 'RAG · Agentes de IA · Capacitación', copy: 'IA construida alrededor de tu contexto, documentos y reglas de trabajo.' },
+  { key: 'Automatización', items: 'Webhooks · Serverless · Workflows', copy: 'Conexiones que quitan pasos repetitivos sin volver opaco el proceso.' },
+  { key: 'Colaboración', items: 'Nextcloud · Mattermost · Plane · Penpot', copy: 'Un espacio compartido para que las personas, el conocimiento y el avance sigan cerca.' },
+];
+---
+<BaseLayout title="Ichkin | Consultoría tecnológica" description="Conectamos sistemas, datos, procesos y personas para que tu operación trabaje junta.">
+  <main class="bg-carbon text-ivory">
+    <section id="inicio" class="bg-ivory text-carbon">
+      <div class="mx-auto min-h-screen max-w-[1440px] px-6 pb-12 pt-6 sm:px-10 lg:px-16">
+        <header class="flex items-center justify-between gap-5" aria-label="Navegación principal">
+          <a class="flex items-center gap-2.5 text-xl font-semibold tracking-[-0.035em] text-carbon" href="#inicio" aria-label="Ichkin, inicio">
+            <OrbitMark className="h-9 w-9" variant="light" />
+            ichkin
+          </a>
+          <a class="rounded-lg bg-carbon px-4 py-2 text-sm font-semibold text-ivory transition-[background-color,transform] duration-150 hover:-translate-y-0.5 hover:bg-graphite" href="#diagnostico">Solicitar diagnóstico</a>
+        </header>
+
+        <div class="grid min-h-[calc(100vh-6rem)] content-center gap-12 py-16 lg:grid-cols-12 lg:gap-16">
+          <div class="lg:col-span-6">
+            <h1 class="max-w-[680px] text-balance text-5xl font-semibold tracking-[-0.04em] text-carbon sm:text-6xl lg:text-7xl">Convierte tecnología dispersa en trabajo conectado.</h1>
+            <p class="mt-7 max-w-[680px] text-lg leading-8 text-graphite sm:text-xl">Ichkin conecta los sistemas, datos y herramientas que ya usas para que tu operación deje de perder contexto entre pasos.</p>
+            <div class="mt-10 flex flex-wrap items-center gap-4">
+              <a class="rounded-lg bg-carbon px-5 py-3 text-base font-semibold text-ivory transition-[background-color,transform] duration-150 hover:-translate-y-0.5 hover:bg-graphite" href="#diagnostico">Solicitar un diagnóstico</a>
+              <a class="rounded-lg border border-carbon/20 bg-white px-5 py-3 text-base font-semibold text-carbon transition-[background-color,transform] duration-150 hover:-translate-y-0.5 hover:bg-carbon/5" href="#capacidades">Ver capacidades</a>
+            </div>
+            <p class="mt-8 max-w-[680px] text-sm leading-6 text-graphite">Una conversación inicial para entender el problema, identificar relaciones y decidir cuál es el siguiente paso útil.</p>
+          </div>
+          <div class="lg:col-span-6">
+            <SystemMap />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-carbon px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto max-w-[1440px]">
+        <p class="max-w-5xl text-balance text-4xl font-semibold leading-[1.03] tracking-[-0.04em] text-ivory sm:text-6xl">La solución no empieza por comprar otra plataforma. Empieza por entender qué necesita conectarse.</p>
+      </div>
+    </section>
+
+    <section class="bg-ivory px-6 py-20 text-carbon sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.76fr_1.24fr] lg:gap-20">
+        <div class="lg:sticky lg:top-10 lg:h-fit">
+          <h2 class="max-w-lg text-4xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-6xl">Una consultoría que mira la operación completa.</h2>
+          <p class="mt-6 max-w-md text-lg leading-8 text-graphite">La capa visible, el sistema que organiza, los datos que explican y las automatizaciones que mantienen el flujo.</p>
+        </div>
+        <ol id="capacidades" class="divide-y divide-carbon/15 border-t border-carbon/15">
+          {services.map((service) => (
+            <li class="grid gap-5 py-8 sm:grid-cols-[minmax(9rem,0.55fr)_minmax(16rem,1fr)] sm:gap-10">
+              <div>
+                <h3 class="text-3xl font-semibold tracking-[-0.035em]">{service.key}</h3>
+                <p class="mt-3 text-sm font-semibold leading-6 text-petroleum">{service.items}</p>
+              </div>
+              <p class="max-w-xl text-base leading-7 text-graphite">{service.copy}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <section class="bg-graphite px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto max-w-[1440px]">
+        <div class="grid gap-8 border-b border-white/15 pb-12 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+          <h2 class="max-w-xl text-4xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-6xl">Antes de implementar, trazamos el mapa.</h2>
+          <p class="max-w-2xl text-lg leading-8 text-[#c8c8c3]">El diagnóstico sirve para mirar la operación completa antes de escoger una plataforma, una automatización o una implementación de IA.</p>
+        </div>
+        <div class="grid divide-y divide-white/15 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+          {[
+            ['Escuchar el contexto', 'Personas, procesos, información y restricciones que ya están en juego.'],
+            ['Trazar las conexiones', 'Qué se debe integrar, qué se debe simplificar y qué no hace falta construir.'],
+            ['Definir el siguiente paso', 'Una decisión concreta que puedas evaluar antes de comprometer más recursos.'],
+          ].map(([title, copy]) => (
+            <article class="py-8 lg:px-8 lg:first:pl-0 lg:last:pr-0">
+              <h3 class="text-2xl font-semibold tracking-[-0.03em] text-ivory">{title}</h3>
+              <p class="mt-3 max-w-sm leading-7 text-technical">{copy}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="diagnostico" class="bg-petroleum px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-end">
+        <div>
+          <OrbitMark className="mb-8 h-20 w-20" />
+          <h2 class="max-w-3xl text-5xl font-semibold leading-[0.94] tracking-[-0.04em] sm:text-7xl">Empecemos por el problema que tienes enfrente.</h2>
+          <p class="mt-7 max-w-2xl text-lg leading-8 text-white/85">Cuéntame qué parte de tu operación quieres hacer más clara, más conectada o más útil. A partir de ahí definimos la conversación correcta.</p>
+        </div>
+        <form class="grid gap-5 border border-white/25 bg-carbon p-6 sm:p-8" aria-describedby="form-note">
+          <label class="grid gap-2 text-sm font-semibold">Tu nombre<input class="rounded-md border border-white/25 bg-white/5 px-4 py-3 font-normal text-white placeholder:text-[#b3b9bf]" name="name" autocomplete="name" placeholder="Cómo te llamas" /></label>
+          <label class="grid gap-2 text-sm font-semibold">Tu correo<input class="rounded-md border border-white/25 bg-white/5 px-4 py-3 font-normal text-white placeholder:text-[#b3b9bf]" type="email" name="email" autocomplete="email" placeholder="tu@empresa.com" /></label>
+          <label class="grid gap-2 text-sm font-semibold">¿Qué quieres resolver?<textarea class="min-h-28 resize-y rounded-md border border-white/25 bg-white/5 px-4 py-3 font-normal text-white placeholder:text-[#b3b9bf]" name="context" placeholder="El contexto, el problema o la oportunidad."></textarea></label>
+          <button class="cursor-not-allowed rounded-md bg-copper px-5 py-3 text-left text-base font-semibold text-carbon opacity-70" type="button" aria-disabled="true">Canal de contacto pendiente</button>
+          <p id="form-note" class="text-sm leading-6 text-white/70">Este formulario es parte del esqueleto visual. Aún no envía ni almacena información.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
