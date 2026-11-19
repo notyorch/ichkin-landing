@@ -18,6 +18,8 @@ ichkin es una consultoría tecnológica que conecta los sistemas, datos y herram
 
 Hablas directamente con quien construye la solución. No es una consultora grande con cuentas comerciales de por medio. A eso se suma el método: primero el mapa de la operación, después la herramienta, y a veces la respuesta es no construir nada.
 
+Qué es ichkin y qué no: implementa y conecta herramientas de código abierto probadas (ERP, CRM, BPM, Nextcloud, etc.), adaptadas a la operación del cliente y sin licencias caras ni un sistema cerrado. No es una plataforma ni un software propio de marca "ichkin" al que el cliente entre, y casi no desarrolla software a medida: solo cuando hace falta, como excepción. El sitio no debe sonar a producto propio ("un sistema que organiza") ni invitar a pedidos de desarrollo desde cero.
+
 ## Operating Context
 
 Se contrata por servicios de consultoría y diagnóstico previo, no por producto de catálogo. Base en Mérida, Campeche (dato tomado del sistema de diseño; confirmar antes de publicarlo).
@@ -26,8 +28,11 @@ Se contrata por servicios de consultoría y diagnóstico previo, no por producto
 
 - Seis áreas de capacidad: Web (websites, interfaces, portfolios), Sistemas (ERP, CRM, CMS, ITSM, BPM), Datos (ETL, data warehouse, analytics), Inteligencia (RAG, agentes de IA, capacitación), Automatización (webhooks, serverless, workflows), Colaboración (Nextcloud, Mattermost, Plane, Penpot).
 - Stack existente: Astro 7, Tailwind 4, Bricolage Grotesque e Inter. Sitio estático de una página.
-- El formulario de diagnóstico es solo esqueleto visual: aún no envía ni almacena información y no hay canal de contacto. Debe seguir diciéndolo hasta que exista (hay una prueba que lo exige).
-- Por decidir: canal de contacto (correo, formulario con backend u otro), dominio y despliegue.
+- El formulario de contacto aún no tiene destino (`data-endpoint` vacío): mientras siga así no debe fingir éxito; al intentar enviar avisa que todavía no puede recibir mensajes (lo exige una prueba). El aviso de privacidad también dice que no recopila datos: actualizarlo al conectar.
+- Pocos campos obligatorios (el dueño trabaja solo y los visitantes son pymes): nombre, correo o WhatsApp (al menos uno) y qué necesita; la descripción solo es obligatoria con "Otro" o "Aún no lo sé". Por confirmar: que sí atiende por WhatsApp y el plazo real de respuesta.
+- Texto del formulario en lenguaje de negocio (término técnico entre paréntesis), correo sin bloquear dominios gratuitos, y sin prometer plazos de respuesta que el dueño no haya confirmado.
+- Plan de contacto: el formulario se conectará después al CRM Frappe del dueño, con Cloudflare por delante (basta poner la URL en `data-endpoint`). Campos: `area`, `need` (opciones preestablecidas por área, con "Otro"), `message`, `name`, `email`, `phone` y el señuelo anti-bots `website` (debe llegar vacío). "Otro" y "Aún no lo sé" exigen descripción para calificar el lead.
+- Por decidir: dominio y despliegue; qué protección de Cloudflare usar en el formulario.
 
 ## Brand Commitments
 
