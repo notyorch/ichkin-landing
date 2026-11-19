@@ -1,0 +1,37 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="on-dark overflow-hidden bg-carbon px-6 pt-16 sm:px-10 lg:px-16 lg:pt-24" aria-label="Pie de página">
+  <div class="mx-auto max-w-[1440px]">
+    <div class="grid gap-12 border-b border-linea-oscura pb-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <p class="font-display max-w-xs text-balance text-3xl font-medium leading-9 text-marfil">Tecnología alrededor de las personas.</p>
+        <a class="btn btn--primary mt-7" href="/#hablemos"><i aria-hidden="true"></i>Hablemos</a>
+        <p class="mt-3 text-sm leading-6 text-gris-tecnico">Sin compromiso.</p>
+      </div>
+
+      <nav aria-label="Secciones del sitio">
+        <h2 class="text-sm font-medium leading-6 text-gris-tecnico">Sitio</h2>
+        <ul class="mt-4 grid gap-1 text-base leading-6">
+          <li><a class="footer-link" href="/">Inicio</a></li>
+          <li><a class="footer-link" href="/servicios/">Servicios</a></li>
+          <li><a class="footer-link" href="/nosotros/">Nosotros</a></li>
+          <li><a class="footer-link" href="/#hablemos">Hablemos</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Información legal">
+        <h2 class="text-sm font-medium leading-6 text-gris-tecnico">Legal</h2>
+        <ul class="mt-4 grid gap-1 text-base leading-6">
+          <li><a class="footer-link" href="/aviso-de-privacidad/">Aviso de privacidad</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-6 text-xs leading-4 text-gris-tecnico">
+      <p>© {year} ichkin. Todos los derechos reservados.</p>
+    </div>
+
+    <img src="/brand/ichkin-wordmark-inverso.svg" alt="ichkin" class="block h-auto w-full select-none pb-6 pt-4 sm:pb-8 lg:pb-10" width="2692" height="746" loading="lazy" />
+  </div>
+</footer>

@@ -1,64 +1,77 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { services, needs, steps } from '../data/services.js';
 
-const services = [
-  { key: 'Web', items: 'Websites · Interfaces · Portfolios', copy: 'Una presencia que explica tu valor, orienta decisiones y abre conversaciones útiles.', story: 'Alguien en una cafetería revisa tu portafolio y decide contratarte.' },
-  { key: 'Sistemas', items: 'ERP · CRM · CMS · ITSM · BPM', copy: 'Procesos y herramientas que dejan de vivir en archivos sueltos, chats y memoria.', story: 'Un equipo lleva la contabilidad en el mismo ERP, al mismo tiempo.' },
-  { key: 'Datos', items: 'ETL · Data warehouse · Analytics', copy: 'Información que llega completa, se entiende y se puede convertir en una decisión.', story: 'La dirección ve en un panel hacia dónde mover la empresa.' },
-  { key: 'Inteligencia', items: 'RAG · Agentes de IA · Capacitación', copy: 'IA construida alrededor de tu contexto, documentos y reglas de trabajo.', story: 'Un agente atiende al cliente y resuelve dudas del equipo.' },
-  { key: 'Automatización', items: 'Webhooks · Serverless · Workflows', copy: 'Conexiones que quitan pasos repetitivos sin volver opaco el proceso.', story: 'A las 7:00, el reporte de la semana llega solo al celular.' },
-  { key: 'Colaboración', items: 'Nextcloud · Mattermost · Plane · Penpot', copy: 'Un espacio compartido para que las personas, el conocimiento y el avance sigan cerca.', story: 'Un equipo de diseño edita el mismo lienzo a la vez.' },
-];
 
 const shifts = [
-  ['Archivos sueltos', 'Un sistema que organiza'],
-  ['Chats y memoria', 'Un espacio compartido'],
-  ['Pasos repetitivos', 'Una automatización que los quita'],
-];
-
-const steps = [
-  ['Escuchar el contexto', 'Personas, procesos, información y restricciones que ya están en juego.'],
-  ['Trazar las conexiones', 'Qué se debe integrar, qué se debe simplificar y qué no hace falta construir.'],
-  ['Definir el siguiente paso', 'Una decisión concreta que puedas evaluar antes de comprometer más recursos.'],
+  ['Archivos sueltos', 'ERP o CRM abierto que los ordena'],
+  ['Chats y memoria', 'Chat y archivos en un solo lugar'],
+  ['Pasos repetitivos', 'Automatizaciones que los quitan'],
 ];
 
 const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
-<BaseLayout title="ichkin | Consultoría tecnológica" description="Conectamos sistemas, datos, procesos y personas para que tu operación trabaje junta.">
+<BaseLayout title="ichkin | Consultoría tecnológica" description="Implementamos y conectamos herramientas de código abierto (ERP, CRM, procesos) para que tu operación trabaje junta.">
   <main class="bg-marfil text-carbon">
     <section id="inicio" class="relative overflow-hidden">
-      <div class="glyph" aria-hidden="true">k</div>
       <div class="relative mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
-        <header class="flex h-[72px] items-center justify-between gap-5 border-b border-linea" aria-label="Navegación principal">
-          <a href="#inicio" aria-label="ichkin, inicio" class="block">
-            <img src="/brand/ichkin-wordmark.svg" alt="ichkin" class="block h-6 w-auto" width="87" height="24" />
-          </a>
-          <nav class="flex items-center gap-3" aria-label="Secciones">
-            <a class="hidden px-3 text-sm font-medium text-pizarra transition-colors hover:text-carbon sm:block" href="#capacidades">Capacidades</a>
-            <a class="hidden px-3 text-sm font-medium text-pizarra transition-colors hover:text-carbon sm:block" href="#metodo">Método</a>
-            <a class="btn btn--secondary btn--sm" href="#diagnostico">Solicitar diagnóstico</a>
-          </nav>
-        </header>
+        <Header current="inicio" />
 
-        <div class="flex flex-col justify-center gap-14 pb-16 pt-14 sm:pt-20 lg:min-h-[calc(100vh-72px)] lg:gap-20">
+        <div class="grid items-center gap-14 pb-24 pt-14 sm:pt-20 lg:min-h-[calc(100vh-72px)] lg:grid-cols-[1.3fr_0.7fr] lg:gap-14">
           <div>
-            <h1 class="font-display rise max-w-[15ch] text-balance text-5xl font-semibold leading-[1.02] text-carbon sm:text-7xl lg:text-[6rem]" style="--i:0">Convierte tecnología dispersa en trabajo conectado.</h1>
-            <p class="rise mt-7 max-w-[440px] text-base leading-6 text-pizarra sm:text-lg sm:leading-7" style="--i:1">ichkin conecta los sistemas, datos y herramientas que ya usas para que tu operación deje de perder contexto entre pasos.</p>
+            <h1 class="font-display rise max-w-[15ch] text-balance text-5xl font-semibold leading-[1.06] text-carbon sm:text-7xl lg:max-w-[18ch] lg:text-[4.5rem] xl:text-[5rem]" style="--i:0">Convierte tecnología dispersa en trabajo conectado.</h1>
+            <p class="rise mt-7 max-w-[440px] text-base leading-6 text-pizarra sm:text-lg sm:leading-7" style="--i:1">ichkin implementa herramientas de código abierto, como ERP y CRM, y las conecta con lo que ya usas para que tu operación deje de perder contexto entre pasos.</p>
             <div class="rise mt-8 flex flex-wrap items-center gap-3" style="--i:2">
-              <a class="btn btn--primary" href="#diagnostico"><i aria-hidden="true"></i>Solicitar un diagnóstico</a>
+              <a class="btn btn--primary" href="#hablemos"><i aria-hidden="true"></i>Hablemos</a>
               <a class="btn btn--secondary" href="#capacidades">Ver capacidades</a>
             </div>
+            <p class="rise mt-5 max-w-[37rem] text-sm leading-6 text-pizarra" style="--i:2">Sin compromiso: la primera conversación es para entender tu problema.</p>
+
+            <ul class="mt-12 max-w-[37rem] border-t border-linea" aria-label="Qué cambia con ichkin">
+              {shifts.map(([from, to], i) => (
+                <li class="rise grid items-baseline gap-x-5 gap-y-1 border-b border-linea py-4 sm:grid-cols-[minmax(8.5rem,0.75fr)_1.5rem_1.25fr]" style={`--i:${i + 3}`}>
+                  <span class="text-base leading-6 text-pizarra">{from}</span>
+                  <svg class="hidden h-4 w-6 self-center text-petroleo sm:block" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h19M15 2l6 6-6 6" /></svg>
+                  <span class="font-display text-xl font-medium leading-7">{to}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <ul class="max-w-[820px] border-t border-linea" aria-label="Qué cambia con ichkin">
-            {shifts.map(([from, to], i) => (
-              <li class="rise grid items-baseline gap-x-6 gap-y-1 border-b border-linea py-4 sm:grid-cols-[minmax(10rem,0.8fr)_1.5rem_1.4fr]" style={`--i:${i + 3}`}>
-                <span class="text-base leading-6 text-pizarra">{from}</span>
-                <svg class="hidden h-4 w-6 self-center text-petroleo sm:block" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8h19M15 2l6 6-6 6" /></svg>
-                <span class="font-display text-2xl font-medium leading-[30px]">{to}</span>
-              </li>
-            ))}
-          </ul>
+          <!-- De lo disperso a lo conectado: muchas fuentes sueltas convergen en un flujo ordenado -->
+          <figure class="rise hidden lg:block" style="--i:4" role="img" aria-label="Antes: hojas de cálculo, chats, correos y apps sueltas. Con ichkin: herramientas de código abierto implementadas y conectadas entre sí y con las que ya usas.">
+            <div class="rounded-lg border border-linea bg-papel p-8" aria-hidden="true">
+              <p class="text-sm font-medium leading-6 text-pizarra">Hoy</p>
+              <div class="relative mt-3 h-44">
+                <span class="scatter" style="left:0;top:4px;--r:-4deg">Hojas de cálculo</span>
+                <span class="scatter" style="left:52%;top:0;--r:3deg">Chats</span>
+                <span class="scatter" style="left:14%;top:62px;--r:2deg">Correos</span>
+                <span class="scatter" style="left:50%;top:78px;--r:-3deg">Apps sueltas</span>
+                <span class="scatter" style="left:4%;top:124px;--r:-2deg">Memoria</span>
+                <span class="scatter" style="left:58%;top:134px;--r:4deg">Archivos</span>
+              </div>
+
+              <svg class="mt-1 block h-auto w-full" viewBox="0 0 320 96" fill="none" aria-hidden="true">
+                <g stroke="#167A72" stroke-width="1.5" stroke-linecap="round" opacity="0.55">
+                  <path d="M24 0C24 52 160 40 160 86" />
+                  <path d="M104 0C104 48 160 44 160 86" />
+                  <path d="M216 0C216 48 160 44 160 86" />
+                  <path d="M296 0C296 52 160 40 160 86" />
+                </g>
+                <circle cx="160" cy="88" r="5" fill="#D66A45" />
+              </svg>
+
+              <p class="mt-2 text-sm font-medium leading-6 text-pizarra">Con ichkin</p>
+              <ol class="mt-3 ml-[5px] grid gap-4 border-l-2 border-petroleo">
+                <li class="relative pl-6 font-display text-xl font-medium leading-7"><span class="flow-dot"></span>ERP, CRM y procesos de código abierto</li>
+                <li class="relative pl-6 font-display text-xl font-medium leading-7"><span class="flow-dot"></span>Tus herramientas actuales, conectadas</li>
+                <li class="relative pl-6 font-display text-xl font-medium leading-7"><span class="flow-dot"></span>A medida, solo cuando hace falta</li>
+              </ol>
+              <p class="mt-6 border-t border-linea pt-4 text-sm leading-6 text-pizarra">Código abierto: sin licencias caras ni un sistema cerrado que te amarre.</p>
+            </div>
+          </figure>
         </div>
       </div>
     </section>
@@ -69,28 +82,51 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
       </div>
     </section>
 
-    <section id="capacidades-section" class="px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
-      <div class="mx-auto grid max-w-[1440px] gap-x-16 gap-y-8 lg:grid-cols-[1.15fr_0.85fr]">
-        <div class="contents lg:block">
-          <div>
-            <h2 class="font-display max-w-xl text-4xl font-semibold leading-[1.05] sm:text-5xl">Una consultoría que mira la operación completa.</h2>
-            <p class="mt-6 max-w-[440px] text-base leading-6 text-pizarra sm:text-lg sm:leading-7">La capa visible, el sistema que organiza, los datos que explican y las automatizaciones que mantienen el flujo.</p>
-          </div>
-          <div data-scene class="scene-wrap sticky top-16 z-10 h-[40vh] min-h-[250px] overflow-hidden rounded-lg border border-linea-oscura bg-[#15181e] lg:top-24 lg:mt-10 lg:aspect-[5/4] lg:h-auto lg:max-h-[calc(100vh-8rem)] lg:w-full">
-            <canvas data-scene-canvas class="block h-full w-full" aria-hidden="true"></canvas>
+    <section id="capacidades" data-rooms-section data-state="idle" style={`--rooms:${services.length}`} class="rooms on-dark relative bg-carbon text-marfil">
+      <div data-stage class="rooms-stage relative overflow-hidden bg-carbon">
+        <canvas data-scene-canvas class="rooms-canvas absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+        <div data-wipe class="room-wipe" aria-hidden="true"></div>
+
+        <div class="rooms-overlay mx-auto flex h-full max-w-[1440px] flex-col justify-between px-6 py-8 sm:px-10 lg:px-16 lg:py-12">
+          <header class="rooms-head">
+            <h2 class="font-display max-w-xl text-balance text-3xl font-semibold leading-[1.05] text-marfil sm:text-4xl lg:text-5xl">Una consultoría que mira la operación completa.</h2>
+            <p class="rooms-sub mt-5 max-w-[440px] text-base leading-6 text-gris-tecnico">La capa visible, el sistema que organiza, los datos que explican y las automatizaciones que mantienen el flujo.</p>
+          </header>
+
+          <div class="rooms-captions">
+            {services.map((service, i) => (
+              <article data-room data-beats={JSON.stringify(service.beats)} data-active={i === 0 ? '' : undefined} class="room-caption">
+                <div class="room-meta">
+                  <h3 class="font-display text-2xl font-medium leading-8 text-marfil sm:text-3xl sm:leading-9">{service.key}</h3>
+                  <p class="mt-1 text-sm font-medium leading-6 text-petroleo-claro">{service.items}</p>
+                  <p class="room-copy mt-3 max-w-md text-base leading-6 text-gris-tecnico">{service.copy}</p>
+                </div>
+                <p class="room-story max-w-md text-base leading-6 text-marfil">{service.story}</p>
+                <div class="beat-card">
+                  <p data-beat class="beat-in font-display text-xl font-medium leading-7 text-marfil sm:text-2xl sm:leading-8">{service.beats[0].text}</p>
+                  <div class="mt-3 flex items-center gap-2" aria-hidden="true">
+                    {service.beats.map((_, k) => <span data-seg data-on={k === 0 ? '' : undefined} class="beat-seg"></span>)}
+                    <span data-count class="ml-auto text-xs leading-4 text-gris-tecnico tabular-nums">1 / {service.beats.length}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
-        <ol id="capacidades" class="border-t border-linea" data-scene-list>
+
+        <nav class="rooms-ticks" aria-label="Habitaciones">
           {services.map((service, i) => (
-            <li class="flex min-h-[78vh] flex-col justify-start gap-3 border-b border-linea pb-10 pt-[calc(40vh+5rem)] lg:min-h-[80vh] lg:justify-center lg:py-10">
-              <span class="eyebrow text-pizarra">{pad(i)}</span>
-              <h3 class="font-display text-3xl font-medium leading-9 sm:text-4xl sm:leading-[44px]">{service.key}</h3>
-              <p class="text-sm font-medium leading-6 text-petroleo">{service.items}</p>
-              <p class="mt-1 max-w-md text-base leading-6 text-pizarra">{service.copy}</p>
-              <p class="max-w-md border-t border-linea pt-3 text-base leading-6 text-carbon">{service.story}</p>
-            </li>
+            <button type="button" data-tick data-active={i === 0 ? '' : undefined} class="room-tick" aria-label={`Ir a ${service.key}`}>
+              <span class="room-tick-label">{service.key}</span>
+              <span class="room-tick-dot"></span>
+            </button>
           ))}
-        </ol>
+        </nav>
+        <p data-hint class="rooms-hint">Desliza para avanzar</p>
+        <a href="#metodo" data-skip class="rooms-skip" aria-label="Saltar la sección de capacidades">
+          Saltar
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2v10M2.5 7.5 7 12l4.5-4.5" /></svg>
+        </a>
       </div>
     </section>
 
@@ -114,53 +150,184 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
       </div>
     </section>
 
-    <section id="diagnostico" class="on-dark bg-carbon px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
-      <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-        <div>
+    <section id="hablemos" class="on-dark bg-carbon px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start lg:gap-16">
+        <div class="lg:sticky lg:top-24 lg:h-fit">
           <h2 class="font-display max-w-3xl text-5xl font-semibold leading-[1.02] text-marfil sm:text-6xl">Empecemos por el problema que tienes enfrente.</h2>
-          <p class="mt-6 max-w-[440px] text-base leading-6 text-gris-tecnico sm:text-lg sm:leading-7">Cuéntanos qué parte de tu operación quieres hacer más clara, más conectada o más útil. A partir de ahí definimos la conversación correcta.</p>
+          <p class="mt-6 max-w-[440px] text-base leading-6 text-gris-tecnico sm:text-lg sm:leading-7">Cuéntanos qué parte de tu operación quieres hacer más clara, más conectada o más útil. A partir de ahí definimos la conversación correcta, sin compromiso.</p>
         </div>
-        <form class="grid gap-5 rounded-lg border border-linea-oscura bg-grafito/40 p-6 sm:p-8" aria-describedby="form-note">
-          <label class="grid gap-2 text-sm font-medium text-marfil">Tu nombre<input class="field" name="name" autocomplete="name" placeholder="Cómo te llamas" /></label>
-          <label class="grid gap-2 text-sm font-medium text-marfil">Tu correo<input class="field" type="email" name="email" autocomplete="email" placeholder="tu@empresa.com" /></label>
-          <label class="grid gap-2 text-sm font-medium text-marfil">¿Qué quieres resolver?<textarea class="field min-h-28 resize-y" name="context" placeholder="El contexto, el problema o la oportunidad."></textarea></label>
-          <button class="btn btn--primary w-fit cursor-not-allowed opacity-60" type="button" aria-disabled="true"><i aria-hidden="true"></i>Canal de contacto pendiente</button>
-          <p id="form-note" class="text-sm leading-6 text-gris-tecnico">Este formulario es parte del esqueleto visual. Aún no envía ni almacena información.</p>
+        <form data-contact-form data-endpoint="" class="grid gap-7 rounded-lg border border-linea-oscura bg-grafito/40 p-6 sm:p-8" aria-describedby="form-trust">
+          <fieldset class="grid gap-3">
+            <legend class="form-legend">¿Qué necesitas? <span class="form-flag">Elige una; el resto cuéntanoslo abajo.</span></legend>
+            <div class="chips">
+              {needs.map((area) => (
+                <label class="chip"><input type="radio" name="area" value={area.label} required /><span>{area.label}</span></label>
+              ))}
+            </div>
+          </fieldset>
+
+          {needs.filter((area) => area.options.length).map((area) => (
+            <fieldset class="need-group grid gap-3" data-need-group data-area={area.label}>
+              <legend class="form-legend">{area.prompt}</legend>
+              <p class="form-hint -mt-1">{area.solves}</p>
+              <div class="chips">
+                {area.options.map((option) => (
+                  <label class="chip"><input type="radio" name="need" value={option} /><span>{option}</span></label>
+                ))}
+              </div>
+            </fieldset>
+          ))}
+
+          <p class="need-group form-hint" data-need-group data-area="Aún no lo sé">Sin problema: cuéntanos tu situación abajo y te ayudamos a aterrizarlo.</p>
+
+          <p class="form-hint -mb-3">Implementamos herramientas de código abierto y las adaptamos a tu operación. Desarrollo a medida, solo cuando hace falta.</p>
+
+          <label class="grid gap-2 text-sm font-medium text-marfil">
+            <span><span data-message-label>Cuéntanos un poco más</span> <span data-message-flag class="form-flag">(opcional)</span></span>
+            <textarea class="field min-h-28 resize-y" name="message" data-message placeholder="Describe lo que necesitas."></textarea>
+          </label>
+
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="grid gap-2 text-sm font-medium text-marfil sm:col-span-2">Nombre completo<input class="field" name="name" autocomplete="name" required placeholder="Cómo te llamas" /></label>
+            <p class="form-hint -mb-2 sm:col-span-2">¿Cómo te respondemos? Déjanos al menos uno: correo o WhatsApp.</p>
+            <label class="grid gap-2 text-sm font-medium text-marfil">Correo<input class="field" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="nombre@empresa.com" /></label>
+            <label class="grid gap-2 text-sm font-medium text-marfil">WhatsApp o teléfono<input class="field" type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="Con lada, ej. +52 999 000 0000" /></label>
+          </div>
+
+          <!-- Trampa para bots: las personas no la ven ni la llenan -->
+          <div class="hp" aria-hidden="true"><label>Sitio web<input type="text" name="website" tabindex="-1" autocomplete="off" /></label></div>
+
+          <div class="grid gap-3">
+            <button class="btn btn--primary w-fit" type="submit" data-submit><i aria-hidden="true"></i><span data-submit-label>Iniciar conversación</span></button>
+            <p id="form-trust" class="max-w-md text-sm leading-6 text-gris-tecnico">Cada mensaje lo revisa personalmente quien construye la solución. Sin compromiso.</p>
+            <p data-status role="status" aria-live="polite" class="form-status" hidden></p>
+          </div>
         </form>
       </div>
     </section>
 
-    <footer class="on-dark border-t border-linea-oscura bg-carbon px-6 py-8 sm:px-10 lg:px-16">
-      <div class="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4">
-        <img src="/brand/ichkin-wordmark-inverso.svg" alt="ichkin" class="block h-5 w-auto" width="72" height="20" />
-        <p class="text-xs leading-4 text-gris-tecnico">Tecnología alrededor de las personas.</p>
-      </div>
-    </footer>
   </main>
+  <Footer />
 </BaseLayout>
 
 <script>
   // El motor 3D pesa: solo se descarga cuando la sección está por aparecer.
-  const section = document.querySelector('#capacidades-section');
-  const wrap = document.querySelector<HTMLElement>('[data-scene]');
+  // "Saltar": salto directo (sin recorrer las habitaciones) y el foco pasa a la sección siguiente
+  document.querySelector<HTMLAnchorElement>('[data-skip]')?.addEventListener('click', (e) => {
+    const target = document.querySelector<HTMLElement>('#metodo');
+    if (!target) return;
+    e.preventDefault();
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: 'instant' });
+    target.tabIndex = -1;
+    target.focus({ preventScroll: true });
+  });
+
+  // Formulario: al elegir un área aparecen sus opciones; "Otro" y "Aún no lo sé" piden descripción.
+  // Conexión con Frappe CRM + Cloudflare: pon la URL en `data-endpoint` del formulario. Campos:
+  // area, need, message, name, email, phone (y el token de Turnstile si añades el widget).
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    form.dataset.js = '';
+    const groups = [...form.querySelectorAll<HTMLElement>('[data-need-group]')];
+    const message = form.querySelector<HTMLTextAreaElement>('[data-message]');
+    const label = form.querySelector('[data-message-label]');
+    const flag = form.querySelector('[data-message-flag]');
+    const sync = () => {
+      const area = form.querySelector<HTMLInputElement>('input[name="area"]:checked')?.value;
+      groups.forEach((g) => {
+        const on = g.dataset.area === area;
+        g.toggleAttribute('data-active', on);
+        g.querySelectorAll<HTMLInputElement>('input').forEach((i) => {
+          i.required = on;
+          if (!on) i.checked = false;
+        });
+      });
+      const need = form.querySelector<HTMLInputElement>('input[name="need"]:checked')?.value;
+      const must = area === 'Aún no lo sé' || need === 'Otro';
+      if (message) message.required = must;
+      if (label) label.textContent = must ? 'Describe lo que necesitas' : 'Cuéntanos un poco más';
+      if (flag) flag.textContent = must ? '(obligatorio)' : '(opcional)';
+      // contacto: basta uno de los dos (correo o WhatsApp); si falta ambos, se piden
+      const email = form.querySelector<HTMLInputElement>('input[name="email"]');
+      const phone = form.querySelector<HTMLInputElement>('input[name="phone"]');
+      if (email && phone) {
+        const missing = !email.value.trim() && !phone.value.trim();
+        email.required = missing;
+        phone.required = missing;
+      }
+    };
+    form.addEventListener('change', sync);
+    form.addEventListener('input', sync);
+    // Envío: si `data-endpoint` tiene URL, manda los campos como JSON (aquí entra el Worker de
+    // Cloudflare / webhook de Frappe). Mientras esté vacío, avisa con honestidad y no finge éxito.
+    const status = form.querySelector<HTMLElement>('[data-status]');
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]');
+    const submitLabel = form.querySelector('[data-submit-label]');
+    const say = (text: string, tone: 'ok' | 'error') => {
+      if (!status) return;
+      status.textContent = text;
+      status.dataset.tone = tone;
+      status.hidden = false;
+    };
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const endpoint = (form.dataset.endpoint || '').trim();
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (data.website) {
+        // el señuelo vino lleno: es un bot; respondemos "bien" sin enviar nada
+        say('Gracias. Recibimos tu mensaje.', 'ok');
+        return;
+      }
+      delete data.website;
+      if (!endpoint) {
+        say('Todavía no podemos recibir mensajes desde este formulario. Vuelve a intentarlo pronto.', 'error');
+        return;
+      }
+      if (submit) submit.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Enviando…';
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        sync();
+        say('Gracias. Recibimos tu mensaje y te respondemos pronto.', 'ok');
+      } catch {
+        say('No pudimos enviar tu mensaje. Inténtalo de nuevo en un momento.', 'error');
+      } finally {
+        if (submit) submit.disabled = false;
+        if (submitLabel) submitLabel.textContent = 'Iniciar conversación';
+      }
+    });
+    sync();
+  }
+
+  const section = document.querySelector<HTMLElement>('[data-rooms-section]');
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-scene-canvas]');
-  const list = document.querySelector('[data-scene-list]');
-  if (section && wrap && canvas && list) {
+  const wipe = document.querySelector<HTMLElement>('[data-wipe]');
+  if (section && stage && canvas && wipe) {
     const io = new IntersectionObserver(
       async (entries) => {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
         try {
           const { start } = await import('../scripts/scene/index.js');
-          list.classList.add('js-scenes');
-          await start({ wrap, canvas, items: [...list.children] });
+          await start({ section, stage, canvas, wipe });
         } catch (err) {
           console.error(err);
-          wrap.dataset.state = 'fallback';
-          list.classList.remove('js-scenes');
+          section.dataset.state = 'fallback';
+          // sin 3D todo el contenido debe seguir disponible para teclado y lectores de pantalla
+          section.querySelectorAll<HTMLElement>('[data-room]').forEach((a) => {
+            a.inert = false;
+            a.removeAttribute('aria-hidden');
+          });
         }
       },
-      { rootMargin: '700px 0px' },
+      { rootMargin: '900px 0px' },
     );
     io.observe(section);
   }

@@ -1,0 +1,66 @@
+---
+interface Props {
+  current?: 'inicio' | 'servicios' | 'nosotros';
+}
+const { current } = Astro.props;
+
+const links = [
+  { id: 'inicio', label: 'Inicio', href: '/' },
+  { id: 'servicios', label: 'Servicios', href: '/servicios/' },
+  { id: 'nosotros', label: 'Nosotros', href: '/nosotros/' },
+];
+---
+<header data-site-header class="site-header border-b border-linea">
+  <div class="flex h-[72px] items-center justify-between gap-5">
+    <a href="/" aria-label="ichkin, inicio" class="block">
+      <img src="/brand/ichkin-wordmark.svg" alt="ichkin" class="block h-6 w-auto" width="87" height="24" />
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Principal">
+      {links.map((l) => (
+        <a class="nav-link" href={l.href} aria-current={current === l.id ? 'page' : undefined}>{l.label}</a>
+      ))}
+      <a class="btn btn--secondary btn--sm ml-3" href="/#hablemos">Hablemos</a>
+    </nav>
+
+    <div class="flex items-center gap-2 md:hidden">
+      <a class="btn btn--secondary btn--sm" href="/#hablemos">Hablemos</a>
+      <button type="button" class="menu-toggle" data-menu-toggle aria-expanded="false" aria-controls="mobile-nav" aria-label="Abrir menú">
+        <svg class="menu-icon menu-icon--open" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 14h14" /></svg>
+        <svg class="menu-icon menu-icon--close" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav" class="mobile-nav md:hidden" aria-label="Principal" hidden>
+    <ul>
+      {links.map((l) => (
+        <li>
+          <a class="mobile-link" href={l.href} aria-current={current === l.id ? 'page' : undefined}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = header?.querySelector<HTMLElement>('#mobile-nav');
+  if (header && toggle && panel) {
+    const set = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      panel.hidden = !open;
+    };
+    toggle.addEventListener('click', () => set(toggle.getAttribute('aria-expanded') !== 'true'));
+    // Escape cierra y devuelve el foco al botón; al pasar a pantalla ancha también se cierra
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) {
+        set(false);
+        toggle.focus();
+      }
+    });
+    matchMedia('(min-width: 768px)').addEventListener('change', (m) => m.matches && set(false));
+  }
+</script>

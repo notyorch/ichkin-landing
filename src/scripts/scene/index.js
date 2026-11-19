@@ -1,31 +1,37 @@
 import * as THREE from 'three';
-import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { C } from './kit.js';
+import gsap from 'gsap';
 import { buildWeb } from './web.js';
 import { buildSistemas } from './sistemas.js';
 import { buildDatos } from './datos.js';
 import { buildInteligencia } from './inteligencia.js';
 import { buildAutomatizacion } from './automatizacion.js';
 import { buildColaboracion } from './colaboracion.js';
+import { createUI } from './ui.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SPACING = 36;
+const BG = 0x111318;
 const builders = [buildWeb, buildSistemas, buildDatos, buildInteligencia, buildAutomatizacion, buildColaboracion];
 
-/** Monta el escenario 3D y lo liga al scroll de la lista de capacidades. */
-export async function start({ wrap, canvas, items }) {
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+/**
+ * Escenario a pantalla completa: una habitación a la vez, fija mientras corre el scroll.
+ * Entre habitaciones, un degradado oscuro barre la pantalla y revela la siguiente.
+ */
+export async function start({ section, stage, canvas, wipe }) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
   } catch {
-    wrap.dataset.state = 'fallback';
+    section.dataset.state = 'fallback';
     return;
   }
-  renderer.setClearColor(0x15181e);
+  renderer.setClearColor(BG);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -38,9 +44,8 @@ export async function start({ wrap, canvas, items }) {
   } catch {}
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x15181e);
-  scene.fog = new THREE.Fog(0x15181e, 45, 90);
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
+  scene.background = new THREE.Color(BG);
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 400);
 
   const stations = builders.map((build, i) => {
     const s = build();
@@ -49,70 +54,116 @@ export async function start({ wrap, canvas, items }) {
     scene.add(s.group);
     return s;
   });
+  const N = stations.length;
 
-  const state = { x: 0 };
-  let target = 0;
-  let pixelCap = 2;
-  const progress = stations.map(() => 0);
-  let active = 0;
+  const ui = createUI(stage);
+  let current = 0; // habitación visible
+  let roomFloat = 0; // posición continua del scroll: 0..N
   let dirty = true;
   let onScreen = true;
+  // teléfonos y pantallas táctiles: densidad de píxeles limitada (los 3x de un teléfono son ~2.25x más píxeles que 2x)
+  const phone = matchMedia('(pointer: coarse)').matches || Math.min(screen.width, screen.height) < 768;
+  let pixelCap = phone ? 1.5 : 2;
 
-  const aim = () => {
-    const vertical = wrap.clientWidth / wrap.clientHeight;
-    const dist = vertical < 1.2 ? 1.34 : 1.17;
-    camera.position.set(state.x + 12.5 * dist, 11 * dist, 17 * dist);
-    camera.lookAt(state.x + 0.3, 2.2, 0.4);
+  // ---- encuadre: la habitación siempre cabe completa, también en vertical (móvil)
+  const frame = () => {
+    const w = stage.clientWidth;
+    const h = stage.clientHeight;
+    const aspect = w / h;
+    const wide = w >= 1024 && aspect >= 1.5; // texto a la izquierda, habitación a la derecha
+    const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const base = Math.hypot(12.5, 11, 17);
+    // ancho/alto de escena que debe caber (la habitación mide ~20 unidades en pantalla)
+    const needW = wide ? 33 : 20;
+    const needH = wide ? 19.5 : 21;
+    const dist = Math.max(needW / (2 * tanV * aspect), needH / (2 * tanV));
+    const k = dist / base;
+    const x = current * SPACING;
+    camera.position.set(x + 12.5 * k, 11 * k, 17 * k);
+    camera.lookAt(x + 0.3, 2.4, 0.4);
+    if (wide) camera.setViewOffset(w, h, -w * 0.14, 0, w, h);
+    else camera.clearViewOffset();
   };
 
   const resize = () => {
-    const w = wrap.clientWidth;
-    const h = wrap.clientHeight;
+    const w = stage.clientWidth;
+    const h = stage.clientHeight;
     if (!w || !h) return;
     renderer.setPixelRatio(Math.min(devicePixelRatio, pixelCap));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    aim();
     dirty = true;
   };
-  new ResizeObserver(resize).observe(wrap);
+  new ResizeObserver(resize).observe(stage);
   resize();
 
-  const goTo = (i) => {
-    active = i;
-    items.forEach((li, k) => li.toggleAttribute('data-active', k === i));
-    target = i * SPACING;
-    if (reduced) state.x = target;
+  // ---- progreso local de una habitación (con reposo al inicio y al final)
+  const pFor = (i) => clamp((roomFloat - i - 0.08) / 0.84);
+
+  // ---- degradado entre habitaciones
+  let want = 0;
+  let busy = false;
+  const swap = () => {
+    current = want;
+    stations.forEach((s, i) => (s.group.visible = i === current));
+    ui.setRoom(current);
+    dirty = true;
+  };
+  const transition = () => {
+    if (busy || want === current) return;
+    busy = true;
+    if (reduced || !wipe.animate) {
+      swap();
+      busy = false;
+      return;
+    }
+    const duration = 780;
+    const anim = wipe.animate(
+      [{ transform: 'translateY(100%)' }, { transform: 'translateY(0%)', offset: 0.5 }, { transform: 'translateY(-100%)' }],
+      { duration, easing: 'cubic-bezier(0.77, 0, 0.175, 1)' },
+    );
+    // la habitación cambia justo cuando el degradado cubre la pantalla
+    const mid = setTimeout(swap, duration * 0.5);
+    anim.onfinish = anim.oncancel = () => {
+      clearTimeout(mid);
+      busy = false;
+      transition(); // si el usuario siguió avanzando, encadena la siguiente
+    };
+  };
+
+  const measure = () => {
+    const scrollable = section.offsetHeight - innerHeight;
+    const top = section.getBoundingClientRect().top;
+    const s = scrollable > 0 ? clamp(-top / scrollable) : 0;
+    roomFloat = s * N;
+    want = Math.min(N - 1, Math.floor(roomFloat));
+    transition();
+    ui.setProgress(current, pFor(current));
+    ui.setHint(s < 0.02);
     dirty = true;
   };
 
-  // Una sola referencia: la línea al 62 % del viewport decide qué elemento está activo
-  // y cuánto ha avanzado dentro de él (sin huecos entre elementos).
-  const measure = () => {
-    const line = innerHeight * 0.62;
-    let found = 0;
-    items.forEach((li, i) => {
-      const r = li.getBoundingClientRect();
-      progress[i] = Math.min(1, Math.max(0, (line - r.top) / r.height));
-      if (r.top <= line) found = i;
-    });
-    if (found !== active) goTo(found);
-    dirty = true;
-  };
   ScrollTrigger.create({
-    trigger: items[0].parentElement,
+    trigger: section,
     start: 'top bottom',
     end: 'bottom top',
     onUpdate: measure,
     onRefresh: measure,
   });
-  goTo(0);
-  measure();
 
-  new IntersectionObserver(([e]) => (onScreen = e.isIntersecting), { rootMargin: '120px' }).observe(wrap);
+  // navegación por puntos: salto directo al inicio de cada habitación
+  ui.ticks.forEach((tick, i) => {
+    tick.addEventListener('click', () => {
+      const scrollable = section.offsetHeight - innerHeight;
+      const y = section.getBoundingClientRect().top + scrollY + ((i + 0.1) / N) * scrollable;
+      window.scrollTo({ top: y, behavior: 'auto' });
+    });
+  });
 
-  // Calidad adaptativa: si los cuadros tardan, baja la resolución y luego apaga sombras.
+  new IntersectionObserver(([e]) => (onScreen = e.isIntersecting), { rootMargin: '120px' }).observe(stage);
+
+  // ---- calidad adaptativa: si los cuadros tardan, baja resolución y luego sombras
   let quality = 2;
   let ema = 0.016;
   let sampled = 0;
@@ -133,6 +184,11 @@ export async function start({ wrap, canvas, items }) {
 
   const clock = new THREE.Clock();
   let t = 0;
+  ui.setRoom(0);
+  measure();
+  frame();
+  renderer.render(scene, camera);
+
   renderer.setAnimationLoop(() => {
     if (!onScreen) return;
     if (reduced && !dirty) return;
@@ -142,26 +198,17 @@ export async function start({ wrap, canvas, items }) {
       if (++sampled > 40 && ema > 0.045) lowerQuality();
     }
     t = reduced ? 0 : t + Math.min(dt, 0.05);
-    // la cámara viaja entre maquetas con suavizado exponencial (tiempo real)
-    if (Math.abs(target - state.x) > 0.01) {
-      state.x += (target - state.x) * (1 - Math.exp(-Math.min(dt, 0.25) * 4.2));
-      dirty = true;
-    } else state.x = target;
-    const here = state.x / SPACING;
-    stations.forEach((s, i) => {
-      const near = Math.abs(i - here) < 1.15;
-      s.group.visible = near;
-      if (near) s.update(t, i === active ? progress[i] : i < active ? 1 : 0);
-    });
-    aim();
+    stations[current].update(t, pFor(current));
+    frame();
     if (!reduced) {
-      camera.position.x += Math.sin(t * 0.25) * 0.35;
-      camera.position.y += Math.sin(t * 0.2) * 0.2;
-      camera.lookAt(state.x + 0.3, 2.2, 0.4);
+      camera.position.x += Math.sin(t * 0.25) * 0.3;
+      camera.position.y += Math.sin(t * 0.2) * 0.18;
+      camera.lookAt(current * SPACING + 0.3, 2.4, 0.4);
     }
     renderer.render(scene, camera);
     dirty = false;
   });
 
-  wrap.dataset.state = 'ready';
+  section.dataset.state = 'ready';
+  ScrollTrigger.refresh();
 }

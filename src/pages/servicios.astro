@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { services, needs } from '../data/services.js';
+
+const slug = (text: string) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const optionsFor = (key: string) => (needs.find((n) => n.label === key)?.options ?? []).filter((o) => o !== 'Otro');
+const solvesFor = (key: string) => needs.find((n) => n.label === key)?.solves ?? '';
+---
+<BaseLayout title="Servicios | ichkin" description="Implementamos y conectamos herramientas de código abierto: web, sistemas, datos, inteligencia, automatización y colaboración.">
+  <main class="bg-marfil text-carbon">
+    <div class="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-16">
+      <Header current="servicios" />
+
+      <section class="pb-14 pt-14 sm:pt-20 lg:pb-20">
+        <h1 class="font-display max-w-[14ch] text-balance text-5xl font-semibold leading-[1.06] sm:text-7xl">Servicios</h1>
+        <p class="mt-6 max-w-[34rem] text-base leading-6 text-pizarra sm:text-lg sm:leading-7">Implementamos y conectamos herramientas de código abierto, adaptadas a tu operación. Desarrollo a medida, solo cuando hace falta.</p>
+        <nav class="mt-8 flex flex-wrap gap-2" aria-label="Áreas de servicio">
+          {services.map((s) => <a class="btn btn--secondary btn--sm" href={`#${slug(s.key)}`}>{s.key}</a>)}
+        </nav>
+      </section>
+
+      {services.map((s) => (
+        <section id={slug(s.key)} class="grid gap-8 border-t border-linea py-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:py-16">
+          <div>
+            <h2 class="font-display text-4xl font-semibold leading-[1.05] sm:text-5xl">{s.key}</h2>
+            <p class="mt-3 text-sm font-medium leading-6 text-petroleo">{s.items}</p>
+          </div>
+          <div class="max-w-2xl">
+            <p class="text-lg leading-7 text-carbon">{solvesFor(s.key)}</p>
+            <p class="mt-4 text-base leading-6 text-pizarra">{s.copy}</p>
+
+            <h3 class="mt-8 text-sm font-medium leading-6 text-pizarra">Lo que solemos hacer</h3>
+            <ul class="mt-2 border-t border-linea">
+              {optionsFor(s.key).map((o) => <li class="border-b border-linea py-3 text-base leading-6">{o}</li>)}
+            </ul>
+
+            <p class="mt-6 text-base leading-6 text-pizarra"><span class="font-medium text-carbon">Por ejemplo:</span> {s.story}</p>
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <section class="on-dark mt-8 bg-carbon px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <div class="mx-auto grid max-w-[1440px] gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+        <h2 class="font-display max-w-3xl text-balance text-4xl font-semibold leading-[1.05] text-marfil sm:text-6xl">¿No sabes por dónde empezar?</h2>
+        <div>
+          <p class="max-w-md text-base leading-6 text-gris-tecnico sm:text-lg sm:leading-7">Primero entendemos tu operación. A veces la respuesta es no construir nada.</p>
+          <a class="btn btn--primary mt-7" href="/#hablemos"><i aria-hidden="true"></i>Hablemos</a>
+          <p class="mt-3 text-sm leading-6 text-gris-tecnico">Sin compromiso.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
