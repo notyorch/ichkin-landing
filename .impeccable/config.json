@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-19T03:08:43.475Z",
+        "reason": "Inter is the body face mandated by the ichkin design system (tokens.json type.families.sans); the user asked to follow that system. Not a separate user confirmation of the font."
+      }
+    ]
+  }
+}
